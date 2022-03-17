@@ -60,7 +60,7 @@ body {
   width: 100%;
   height: 100%;
 }
-.game__pop {
+.pop-up {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -71,10 +71,10 @@ body {
   transform: translateY(-50%);
   margin: auto;
 }
-.pop__restart {
+.pop__refresh {
   visibility: hidden;
 }
-.game__restart {
+.pop-up__refresh {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -84,7 +84,7 @@ body {
   width: 50px;
   height: 50px;
 }
-.game__message {
+.pop-up__messag {
   margin-top: 10px;
   color: white;
 }

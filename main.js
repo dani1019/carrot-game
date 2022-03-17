@@ -3,11 +3,12 @@ const fieldObject = field.getBoundingClientRect();
 const gameBtn = document.querySelector('.game__button');
 const gameTimer = document.querySelector('.game__time');
 const gameScore = document.querySelector('.game__score');
-const popRestart = document.querySelector('.pop__restart');
-const gameRestart = document.querySelector('.game__restart');
-const gameMessage = document.querySelector('.game__message');
+const popUp = document.queryCommandValue('.pop-up');
+const popUpRefresh = document.querySelector('.pop-up__refresh');
+const popUpText = document.querySelector('.pop-up__message');
 const imgSize = 80;
 const CARROT_COUNT = 10;
+const BUG_COUNT = 10;
 const GAME_DURATION_SEC = 10;
 let GAME_SCORE = 10;
 let timer = undefined;
@@ -19,7 +20,7 @@ let started = false;
 
 function initGame(){
     addItem('carrot',CARROT_COUNT,'img/carrot.png');
-    addItem('bug',CARROT_COUNT,'img/bug.png');
+    addItem('bug',BUG_COUNT,'img/bug.png');
 }
 
 function addItem(classPath,count,imgPath){
@@ -33,7 +34,6 @@ function addItem(classPath,count,imgPath){
     img.setAttribute('class', classPath);
     img.setAttribute('src', imgPath);
     img.style.position = 'absolute';
-    field.appendChild(img);
     const x = randomSpot(x1, x2);
     const y = randomSpot(y1, y2);
     img.style.left=`${x}px`;
@@ -68,6 +68,20 @@ function startGame(){
     startGameTimer();
 }
 
+function stopGame(){
+    started = false;
+    stopGameTimer();
+    hiddenGameButton();
+    showPopUpWithText('REPLAY?');
+};
+
+function finishGame(win){
+    started = false;
+    stopBtnHidden();
+    showPopUpWithText(win ? 'YOU WIN' : 'YOU LOST');
+}
+
+
 //게임 시작 전 당근, 벌레를 클릭하면, 눌리지 않게 해야함.
 function onfieldClick(event){
     if(!started){
@@ -87,37 +101,32 @@ function onfieldClick(event){
     }
 }
 
+popUpRefresh.addEventListener('click',()=>{
+    startGame();
+    hidePopUp();
+});
+
 function updataScoreBoard(){
     gameScore.innerText = CARROT_COUNT - score;
 }
-
-function finishGame(win){
-    started = false;
-    stopBtnHidden();
-    popUpShow(win ? 'YOU WIN' : 'YOU LOST');
-}
-
-
-function stopGame(){
-    started = false;
-    stopGameTimer();
-    stopBtnHidden();
-    popUpShow('RESTART');
-};
 
 function showStopBtn(){
     const icon = document.querySelector('.fas');
     icon.classList.remove('fa-caret-right');
     icon.classList.add('fa-stop');
-
+    const stopBtn = document.querySelector('.fa-stop');
+    stopBtn.style.fontSize = '50px';
 }
+
+function hiddenGameButton{
+    gameBtn.style.visibility = 'hidden';
+}
+
 function showTimerAndScore(){
     gameTimer.style.visibility = 'visible';
     gameScore.style.visibility = 'visible';
 }
 
-//게임재시작하고 나서, 당근수, 시간 초기화하는 방법?
-//지금 게임 재시작하면, 당근수 0,시간 0되서 자동으로 You Win나옴
 function startGameTimer(){
     let remainTime = GAME_DURATION_SEC;
     let score = CARROT_COUNT;
@@ -135,33 +144,18 @@ function stopGameTimer(){
     clearInterval(timer);
 }
 
-function stopBtnHidden(){
+function showPopUpWithText(){
     gameBtn.style.visibility = 'hidden';
 }
 
 function popUpShow(text){
-    popRestart.style.visibility = 'visible';
-    gameMessage.innerText = text;
+    popUpRefresh.style.visibility = 'visible';
+    popUpText.innerText = text;
 }
 
-popRestart.addEventListener('click',() =>{
-    hidepopRestart();
-});
+function  hidePopUp(){
 
-//맨처음 화면으로 돌아가야 한다.
-function hidepopRestart(){
-    popRestart.style.visibility='hidden';
-    gameTimer.style.visibility = 'hidden';
-    gameScore.style.visibility = 'hidden';
-    gameBtn.style.visibility='visible';
-    const icon = document.querySelector('.fas');
-    icon.classList.remove('fa-stop');
-    icon.classList.add('fa-caret-right');
-    field.innerHTML= '';
-    started = false;
-    
 }
-
 function updateTime(time){
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
