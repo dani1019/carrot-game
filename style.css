@@ -42,6 +42,8 @@ body {
   font-size: 40px;
   text-align: center;
   visibility: hidden;
+  user-select: none;
+  cursor: auto;
 }
 .game__score {
   border-radius: 90%;
@@ -54,6 +56,8 @@ body {
   margin-top: 20px;
   border: 5px solid black;
   visibility: hidden;
+  user-select: none;
+  cursor: auto;
 }
 .game__field {
   position: relative;
@@ -61,15 +65,16 @@ body {
   height: 100%;
 }
 .pop-up {
+  width: 400px;
+  height: 140px;
+  margin: auto;
+  padding: 20px;
+  background-color: #00000090;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #00000090;
-  width: 900px;
-  height: 800px;
   transform: translateY(-50%);
-  margin: auto;
 }
 .pop__refresh {
   visibility: hidden;
@@ -84,7 +89,20 @@ body {
   width: 50px;
   height: 50px;
 }
-.pop-up__messag {
+.pop-up__message {
   margin-top: 10px;
   color: white;
+}
+.pop-up--hide {
+  display: none;
+}
+
+.carrot,
+.bug {
+  transition: tranform 100ms ease-in;
+}
+
+.carrot:hover,
+.bug:hover {
+  transform: scale(1.1);
 }
