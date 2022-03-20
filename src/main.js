@@ -1,21 +1,25 @@
+'use strict';
+import PopUp from './popup.js';
+
 const field = document.querySelector('.game__field');
 const fieldObject = field.getBoundingClientRect();
 const gameBtn = document.querySelector('.game__button');
 const gameTimer = document.querySelector('.game__time');
 const gameScore = document.querySelector('.game__score');
-const popUp = document.querySelector('.pop-up');
-const popUpRefresh = document.querySelector('.pop-up__refresh');
-const popUpText = document.querySelector('.pop-up__message');
-const popUpHide = document.querySelector('.pop-up--hide');
+
 const imgSize = 80;
 const CARROT_COUNT = 10;
 const BUG_COUNT = 10;
 const GAME_DURATION_SEC = 10;
+
 let timer = undefined;
 let score = 0;
 let started = false;
 
-const carrotSound = new Audio()
+const gameFinishBanner = new PopUp();
+gameFinishBanner.setClickListener(()=>{
+    startGame();
+});
 
 function initGame(){
     addItem('carrot',CARROT_COUNT,'img/carrot.png');
@@ -69,13 +73,13 @@ function stopGame(){
     started = false;
     stopGameTimer();
     hiddenGameButton();
-    showPopUpWithText('REPLAY?');
+    gameFinishBanner.showWithText('REPLAY?');
 };
 
 function finishGame(win){
     started = false;
     hiddenGameButton();
-    showPopUpWithText(win ? 'YOU WIN' : 'YOU LOST');
+    gameFinishBanner.showWithText(win ? 'YOU WIN' : 'YOU LOST');
 }
 
 function onfieldClick(event){
@@ -96,11 +100,6 @@ function onfieldClick(event){
     }
 }
 
-popUpRefresh.addEventListener('click',()=>{
-    startGame();
-    hidePopUp();
-});
-
 function updataScoreBoard(){
     gameScore.innerText = CARROT_COUNT - score;
 }
@@ -116,7 +115,7 @@ function showStopButton(){
 
 function hiddenGameButton(){
     gameBtn.style.visibility = 'hidden';
-    popUp.classList.remove('.pop-up--hide');
+    gameFinishBanner.hide();
 }
 
 function showTimerAndScore(){
@@ -141,17 +140,9 @@ function stopGameTimer(){
     clearInterval(timer);
 }
 
-function  hidePopUp(){
-    popUp.classList.add('pop-up--hide');
-}
-
 function updateTimeText(time){
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
     gameTimer.innerHTML = `${minutes}:${seconds}`;
 };
 
-function showPopUpWithText(text){
-    popUpText.innerText = text;
-    popUp.classList.remove('pop-up--hide');
-};
